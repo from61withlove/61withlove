@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>61withlove Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a giant elastic wordmark, then each case study pinned and read sideways like the PDF's spreads, every image sat on a white plate. */
+:root{
+  --ground:#F2EEEC;   /* the warm panel colour from the deck */
+  --plate:#FFFFFF;
+  --ink:#0C0C0C;
+  --mute:#8E8A88;
+  --line:#D9D3D0;
+  --love:#E4471C;     /* the heart sticker orange, used sparingly */
+  --display:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --gut:clamp(16px,3vw,48px);
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--ground)}
+body{background:var(--ground);color:var(--ink);font-family:var(--mono);font-weight:400;font-size:13px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--love);outline-offset:3px}
+.lab{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.mute{color:var(--mute)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px var(--gut);mix-blend-mode:difference;color:#fff;pointer-events:none}
+.nav a,.nav button{pointer-events:auto}
+.nav .mid{text-align:center;min-width:16ch}
+.nav .r{justify-self:end;display:flex;gap:24px}
+.nav a:hover{opacity:.6}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:72px var(--gut) 0;overflow:hidden}
+.hero-top{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-bottom:3vw;border-bottom:1px solid var(--line)}
+.word{display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--display);font-weight:860;line-height:.78;letter-spacing:-.01em;padding-top:2.2vw;user-select:none;white-space:nowrap}
+.word span{display:inline-block;font-variation-settings:"wdth" 100;transition:font-variation-settings .5s cubic-bezier(.2,.7,.2,1)}
+.hero-sub{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:22px 0 0;align-items:start}
+.hero-sub p{max-width:30ch}
+.stage{position:relative;height:clamp(340px,46vw,620px);margin-top:28px}
+.trail{position:absolute;width:clamp(120px,15vw,230px);background:var(--plate);padding:8px;box-shadow:0 1px 0 rgba(0,0,0,.04),0 18px 40px -24px rgba(0,0,0,.35);transform:translate(-50%,-50%);pointer-events:none;will-change:transform,opacity}
+.trail img{width:100%}
+.trail.seed{pointer-events:auto;cursor:pointer;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.trail.seed:hover{transform:translate(-50%,-52%) scale(1.04)}
+.trail .cap{display:flex;justify-content:space-between;padding-top:6px;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.hint{position:absolute;right:0;bottom:12px}
+
+/* 3D scene: plates orbit through the wordmark */
+.scene{position:relative}
+#gl,.tag,.glhint{display:none}
+.scene.gl{height:clamp(460px,58vw,860px);margin:8px calc(-1*var(--gut)) 0}
+.scene.gl .word{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.scene.gl .stage{display:none}
+.scene.gl #gl{display:block;position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y;cursor:pointer}
+.scene.gl #gl:active{cursor:grabbing}
+.scene.gl .glhint{display:flex;position:absolute;left:var(--gut);right:var(--gut);bottom:14px;justify-content:space-between;pointer-events:none}
+.tag{position:fixed;left:0;top:0;z-index:45;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 9px;white-space:nowrap;transform:translate(22px,22px);opacity:0;transition:opacity .2s}
+.scene.gl .tag{display:block}
+.tag.on{opacity:1}
+@media (pointer:fine){.scene.gl #gl{cursor:none}}
+.hero-sub{border-top:1px solid var(--line)}
+@media (pointer:coarse){.glhint span:first-child{display:none}}
+
+/* ---------- index ---------- */
+.index{padding:14vw var(--gut) 10vw}
+.sec-head{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-bottom:16px;border-bottom:1px solid var(--ink)}
+.rows{list-style:none}
+.row a{display:grid;grid-template-columns:5ch 1fr 1fr 6ch;gap:16px;align-items:center;padding:14px 0 12px;border-bottom:1px solid var(--line);position:relative}
+.row .t{font-family:var(--display);font-weight:780;font-size:clamp(34px,7vw,112px);line-height:.9;letter-spacing:-.015em;font-variation-settings:"wdth" 72;transition:font-variation-settings .55s cubic-bezier(.2,.7,.2,1),color .3s}
+.row .n{align-self:start;padding-top:.6em}
+.row .d{align-self:end;padding-bottom:.4em}
+.row .go{justify-self:end;font-size:20px;transition:transform .4s}
+.row a:hover .t,.row a:focus-visible .t{font-variation-settings:"wdth" 125}
+.row a:hover .n{color:var(--love)}
+.row a:hover .go{transform:translateX(6px)}
+.peek{position:fixed;left:0;top:0;width:240px;padding:8px;background:var(--plate);z-index:40;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.85);transition:opacity .25s,transform .35s cubic-bezier(.2,.7,.2,1);box-shadow:0 22px 50px -28px rgba(0,0,0,.45)}
+.peek.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+/* ---------- project ---------- */
+.proj{position:relative;border-top:1px solid var(--line)}
+.pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.track{flex:1;display:flex;align-items:center;gap:clamp(28px,4vw,72px);padding:64px var(--gut) 48px;will-change:transform;width:max-content}
+.hud{position:absolute;left:var(--gut);right:var(--gut);bottom:18px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.bar{height:1px;background:var(--line);position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink)}
+
+.cover{width:min(78vw,1100px);height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-top:10px}
+.cover .num{font-family:var(--display);font-weight:900;font-variation-settings:"wdth" 62;font-size:min(46vh,30vw);line-height:.74;letter-spacing:-.04em}
+.cover h2{font-family:var(--display);font-weight:760;font-variation-settings:"wdth" 110;font-size:clamp(40px,6.4vw,104px);line-height:.88;letter-spacing:-.02em;text-wrap:balance;margin-top:2vh}
+.cover .meta{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:8px 40px;margin-top:3vh}
+.cover .meta b{display:block;font-weight:500}
+
+.txt{width:min(30rem,80vw);flex:none;display:flex;flex-direction:column;gap:22px;align-self:stretch;justify-content:center}
+.txt h3{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:8px}
+.txt .lead{font-family:var(--display);font-weight:500;font-variation-settings:"wdth" 88;font-size:clamp(20px,1.9vw,30px);line-height:1.12;letter-spacing:-.005em;text-wrap:balance}
+.txt dl{display:grid;gap:16px}
+.txt dt{font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;display:flex;gap:10px}
+.txt dt em{font-style:normal;color:var(--mute)}
+.txt dd{max-width:44ch}
+
+.plate{flex:none;background:var(--plate);padding:clamp(10px,1.2vw,18px);height:calc(100vh - 220px);max-height:760px;cursor:zoom-in;display:flex;flex-direction:column;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.plate.s{height:calc(70vh - 160px)}
+.plate.s.lo{align-self:flex-end;margin-bottom:6vh}
+.plate.s.hi{align-self:flex-start;margin-top:4vh}
+.plate img{height:100%;width:auto;max-width:none;object-fit:contain;flex:1;min-height:0}
+.plate figcaption{display:flex;justify-content:space-between;gap:16px;padding-top:8px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);flex:none}
+.plate:hover{transform:translateY(-6px)}
+
+.stat{flex:none;align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:0 1vw}
+.stat .big{font-family:var(--display);font-weight:880;font-variation-settings:"wdth" 62;font-size:min(40vh,26vw);line-height:.78;letter-spacing:-.04em}
+.stat .big.wd{font-size:min(17vh,14vw);font-variation-settings:"wdth" 125;line-height:.86;display:block;white-space:normal;max-width:9ch}
+.stat .big sup{font-size:.35em;vertical-align:top;position:relative;top:.1em;color:var(--love)}
+
+.spec{flex:none;width:min(26rem,78vw);align-self:center;display:grid;gap:26px;padding:28px;border:1px solid var(--line)}
+.sw{display:flex;gap:14px}
+.sw div{flex:1}
+.sw i{display:block;aspect-ratio:1;border:1px solid var(--line);margin-bottom:8px}
+.faces{display:grid;gap:10px}
+.faces div{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:10px;gap:12px}
+.faces .aa{font-size:30px;line-height:1}
+
+.next{flex:none;width:min(36rem,80vw);align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.next a{font-family:var(--display);font-weight:800;font-variation-settings:"wdth" 70;font-size:clamp(40px,6vw,92px);line-height:.88;letter-spacing:-.02em;transition:font-variation-settings .55s}
+.next a:hover{font-variation-settings:"wdth" 125}
+.next a span{color:var(--love)}
+
+/* ---------- footer ---------- */
+.foot{padding:16vw var(--gut) 24px;border-top:1px solid var(--line);overflow:hidden}
+.foot .with{font-family:var(--display);font-weight:860;font-size:20.5vw;line-height:.76;letter-spacing:-.03em;font-variation-settings:"wdth" 62;white-space:nowrap}
+.foot .with em{font-style:normal;color:var(--love)}
+.foot .base{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;padding-top:14px;border-top:1px solid var(--ink)}
+
+/* ---------- cursor + lightbox ---------- */
+.cur{position:fixed;left:0;top:0;z-index:60;width:10px;height:10px;border-radius:50%;background:var(--love);pointer-events:none;transform:translate(-50%,-50%);transition:width .3s,height .3s,background .3s;display:grid;place-items:center;color:#fff;font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:0}
+.cur.on{opacity:1}
+.cur.big{width:68px;height:68px}
+.cur.ring{width:34px;height:34px;background:transparent;border:1px solid var(--ink)}
+.cur b{font-weight:500;opacity:0;transition:opacity .2s}
+.cur.big b{opacity:1}
+@media (pointer:fine){.plate,.trail.seed,.row a{cursor:none}}
+
+.lb{position:fixed;inset:0;z-index:70;background:rgba(242,238,236,.97);display:none;grid-template-rows:auto 1fr auto;padding:16px var(--gut)}
+.lb.on{display:grid}
+.lb .bar2{display:flex;justify-content:space-between}
+.lb figure{display:grid;place-items:center;min-height:0;padding:24px 0}
+.lb img{max-height:100%;max-width:100%;background:var(--plate);padding:14px;object-fit:contain}
+.lb .ctl{display:flex;justify-content:space-between}
+.lb button:hover{color:var(--love)}
+
+/* ---------- small screens / reduced motion: no pinning, swipe instead ---------- */
+@media (max-width:860px){
+  .hero-top,.hero-sub,.sec-head,.foot .base{grid-template-columns:1fr 1fr}
+  .hero-top>:nth-child(n+3),.sec-head>:nth-child(3){display:none}
+  .row a{grid-template-columns:4ch 1fr 3ch}
+  .row .d{display:none}
+  .peek{display:none}
+}
+.static .proj{height:auto!important}
+.static .pin{position:relative;height:auto;overflow:visible}
+.static .track{width:auto;overflow-x:auto;scroll-snap-type:x mandatory;transform:none!important;padding-top:56px;padding-bottom:64px;align-items:stretch;-webkit-overflow-scrolling:touch}
+.static .track>*{scroll-snap-align:start}
+.static .plate,.static .plate.s{height:min(62vh,520px);align-self:center;margin:0}
+.static .cover{height:auto;min-height:min(62vh,520px);width:86vw}
+.static .cover .num{font-size:38vw}
+.static .stat .big{font-size:38vw}
+.static .cover .meta{grid-template-columns:1fr 1fr}
+.static .stat .big.wd{font-size:16vw}
+.static .hud{display:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav lab" aria-label="Site">
+  <a href="#top">61withlove</a>
+  <span class="mid" id="where">Index</span>
+  <span class="r"><a href="#index">Work</a><a href="#contact">Info</a></span>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-top lab">
+    <span>61withlove design</span>
+    <span>Multidisciplinary designer</span>
+    <span>Brand / Web / Product / Objects</span>
+    <span style="justify-self:end">5 projects I am proud of</span>
+  </div>
+  <div class="scene" id="scene">
+    <h1 class="word" id="word" aria-label="61withlove"></h1>
+    <div class="stage" id="stage"><span class="hint lab mute" id="hint">Click a plate to open it</span></div>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="tag lab" id="tag"></div>
+    <div class="glhint lab mute"><span>Move to stir the glass</span><span>Click to melt it into a heart</span></div>
+  </div>
+  <div class="hero-sub">
+    <p class="lab">Rebrands, websites, catalogues and stone. Built end to end, usually against a deadline.</p>
+    <p class="lab mute">[01] Hillel<br>[02] BNF Models<br>[03] Sekta.Studio</p>
+    <p class="lab mute">[04] NDA statuettes<br>[05] Valeria Ilina</p>
+    <p class="lab" style="justify-self:end;text-align:right"><a href="#index">Scroll to index ↓</a></p>
+  </div>
+</header>
+
+<section class="index" id="index">
+  <div class="sec-head lab"><span>Index</span><span>Project</span><span>Discipline</span><span style="justify-self:end">05</span></div>
+  <ul class="rows" id="rows"></ul>
+</section>
+
+<main id="work"></main>
+
+<footer class="foot" id="contact">
+  <div class="with" aria-label="With love">WITH<em>♥</em>LOVE</div>
+  <div class="base lab">
+    <span>61withlove design</span>
+    <span>Multidisciplinary designer</span>
+    <span class="mute">Brand identity, web &amp; product, industrial design, art direction</span>
+    <a href="#top" style="justify-self:end">Back to top ↑</a>
+  </div>
+</footer>
+
+<img class="peek" id="peek" alt="" src="img/p01.jpg">
+<div class="cur" id="cur"><b>View</b></div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="bar2 lab"><span id="lbT"></span><button id="lbX">Close ✕</button></div>
+  <figure><img id="lbI" alt=""></figure>
+  <div class="ctl lab"><button id="lbP">← Prev</button><span id="lbN"></span><button id="lbF">Next →</button></div>
+</div>
+
+<script>
+const I=(f,w,h,c)=>({f:'img/'+f,w,h,c});
+const P=[
+ {n:'01',k:'hillel',t:'Hillel',sub:'Visual rebranding',disc:'Brand / Print / Social',
+  about:'Visual rebranding for an educational and community organisation targeting a younger audience.',
+  challenge:'The outdated design failed to resonate with the target demographic, resulting in fragmented content and declining engagement metrics.',
+  sol:[['Strategy','Developed three distinct concepts in Figma, justifying their business impact, ultimately adopting a minimalist style with brutalist elements.'],
+       ['Constraint management','Adapted bold visual styles to comply with international brand guidelines and religious standards.'],
+       ['Crisis management','Provided rapid prepress support for large-format print (posters, flyers), often fixing technical errors from external contractors under tight deadlines, one hour before print.']],
+  stat:['+30','%','Instagram engagement'],
+  res:[['Engagement growth','Achieved a +30% increase in Instagram engagement.'],
+       ['Systematisation','Created a template design system that streamlined content production for the entire team.'],
+       ['Recognition','Scaled the new visual language across all social media and the landing page, receiving high praise from management.']],
+  imgs:[I('p01.jpg',488,609,'Good Deeds Day poster'),I('p02.jpg',590,507,'Sticker'),I('p03.jpg',535,767,'Merch / keyring')],
+  order:['cover','about',0,'sol',1,'stat','res',2,'next']},
+ {n:'02',k:'bnf',t:'BNF Models',sub:'Web & product design',disc:'Web / Product / Catalogue',
+  about:'A complete digital showcase and catalogue for a modelling agency, built from scratch.',
+  challenge:'Structure a catalogue of 100+ models so clients can quickly filter and select talent by specific parameters.',
+  sol:[['Design architecture','A creative concept on a non-standard grid to set the agency apart, aligned with the founder’s brand aesthetic.'],
+       ['Technical implementation','UX/UI design combined with custom HTML/CSS to go beyond standard Tilda capabilities, optimising performance and functionality.'],
+       ['Data & content','Audited, cleaned and systematised photo materials and data for 100+ model cards.'],
+       ['Cross-platform','Full responsive design for desktop, tablet and mobile, with bilingual content for an international market.']],
+  spec:{sw:[['#0C0C0C','0C0C0C'],['#AAAAAA','AAAAAA']],faces:[['Helvetica Neue','Regular','400'],['Helvetica Neue','Medium','500']],ff:'"Helvetica Neue",Helvetica,Arial,sans-serif'},
+  stat:['5','wk','From brief to turnkey launch'],
+  res:[['Business efficiency','The site became the primary tool for attracting new models and major clients through professional presentation and efficient search.'],
+       ['Timeline','Delivered a turnkey, functional web solution in 5 weeks, covering all technical setup and content population.']],
+  imgs:[I('p05.jpg',889,589,'Home, tablet'),I('p04.jpg',657,281,'Latest talent'),I('p07.jpg',695,670,'About & contacts')],
+  order:['cover','about',0,'sol',1,'spec','stat','res',2,'next']},
+ {n:'03',k:'sekta',t:'Sekta.Studio',sub:'Portfolio system for an architecture studio',disc:'Web / Data / Localisation',
+  about:'A premium digital showcase for an architectural studio, designed to attract investors and high-profile clients.',
+  challenge:'Transmit the studio’s expertise through an aesthetically pure, high-end display of architectural projects.',
+  sol:[['Architectural design','A non-standard floating grid built on negative space, the “air”. Custom CSS goes past standard platform blocks so the composition carries the scale of the work.'],
+       ['Systemic data','Content for 48 bilingual (RU/EN) project pages structured in one database, for speed and accuracy.'],
+       ['UX/UI programming','Custom HTML logic tracks and stores language preference across the whole navigation path.'],
+       ['Localisation','End-to-end translation with precise architectural terminology.']],
+  spec:{sw:[['#0C0C0C','0C0C0C'],['#AAAAAA','AAAAAA']],faces:[['IBM Plex Mono','Light','300'],['IBM Plex Mono','Semibold','500'],['Inter 28pt','Semibold','600']],ff:'var(--mono)'},
+  stat:['48','','Bilingual project pages'],
+  res:[['Reputational asset','The website became a key tool for showing the studio’s standards to professional investors.'],
+       ['Project status','Delivered as a fully realised, turnkey technical and visual product.']],
+  imgs:[I('p09.jpg',889,589,'Home, tablet'),I('p08.jpg',430,818,'Mobile'),I('p11.jpg',909,789,'Projects grid'),I('p12.jpg',621,583,'Project page')],
+  order:['cover','about',0,1,'sol',2,'spec','stat','res',3,'next']},
+ {n:'04',k:'nda',t:'Stone Statuettes',sub:'Industrial design & production (NDA)',disc:'Object / Production',
+  about:'Design and production preparation for commemorative statuettes marking a major logistics company’s anniversary.',
+  challenge:'Create a physical object that reflects corporate identity under extremely tight deadlines.',
+  sol:[['Design engineering','Technical layouts for stone engraving and cutting based on PR requirements, production-ready for the contractor.'],
+       ['Production management','Primary liaison between the client and the stone fabrication shop, accurate first time with no extra revisions.'],
+       ['Crisis management','Design, approval and production handover delivered turnkey in 4 hours, meeting a deadline where internal specialists had failed.']],
+  stat:['4','h','Design to production handover'],
+  res:[['Physical execution','Released a limited series of corporate statuettes for a high-profile anniversary event.'],
+       ['Efficiency','High professional standards under extreme pressure for a large corporate client.']],
+  imgs:[I('p13.jpg',575,702,'Statuettes, concrete'),I('p14.jpg',489,615,'Cutting drawing, mm'),I('p15.jpg',643,481,'Engraving detail')],
+  order:['cover','about',0,'sol',1,'stat','res',2,'next']},
+ {n:'05',k:'valeria',t:'Valeria Ilina',sub:'Brand identity & experimental web',disc:'Identity / Web / Art direction',
+  about:'A conceptual visual identity and website for fashion photographer Valeria Ilina.',
+  challenge:'A visual language that carries the photographer’s chaotic, artistic, expressive style through an interactive interface.',
+  sol:[['Visual concept','A design system on digital-brutalism principles, replacing standard grids with an art-chaotic composition.'],
+       ['Technical design','UX architecture from scratch, including scrolling behaviour and interactive transitions, consistent across desktop and mobile.'],
+       ['Art direction','A presentation concept where the interface extends the artistic statement instead of serving as a background for images.']],
+  spec:{sw:[['#0C0C0C','0C0C0C'],['#AAAAAA','AAAAAA'],['#FFFFFF','FFFFFF']],faces:[['Kamerik 105','Book','400'],['Kamerik 105','Bold','700'],['Burford Rustic','Regular 2','400']],ff:'var(--display)'},
+  stat:['Art-chaotic','','Composition over grid',true],
+  res:[['Innovative approach','Proved that a portfolio can move beyond the typical gallery layout toward unique interactive spaces.'],
+       ['Portfolio asset','Shows advanced art direction, a deep understanding of composition and non-standard branding solutions.']],
+  imgs:[I('p17.jpg',889,589,'Home, tablet'),I('p16.jpg',559,604,'Scattered index'),I('p19.jpg',778,764,'Mobile'),I('p20.jpg',542,663,'Campaign still')],
+  order:['cover','about',0,1,'sol',2,'spec','stat','res',3,'next']}
+];
+const ALL=P.flatMap(p=>p.imgs.map(i=>({...i,p})));
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+/* wordmark */
+const W=document.getElementById('word');
+W.innerHTML=[...'61WITHLOVE'].map(c=>`<span aria-hidden="true">${c}</span>`).join('');
+const L=[...W.children];
+function fitWord(){W.style.fontSize='100px';W.style.width='max-content';const w=W.getBoundingClientRect().width;W.style.width='';W.style.fontSize=(100*W.clientWidth/w*0.985)+'px'}
+W.style.justifyContent='space-between';
+
+/* index rows */
+document.getElementById('rows').innerHTML=P.map((p,i)=>`<li class="row"><a href="#${p.k}" data-i="${i}"><span class="n lab">[${p.n}]</span><span class="t">${p.t}</span><span class="d lab mute">${p.sub}<br>${p.disc}</span><span class="go">→</span></a></li>`).join('');
+
+/* projects */
+const plate=(im,p,cls='')=>`<figure class="plate ${cls}" data-src="${im.f}" tabindex="0" role="button" aria-label="Open ${esc(im.c)}"><img src="${im.f}" width="${im.w}" height="${im.h}" alt="${esc(p.t+': '+im.c)}" loading="lazy" decoding="async"><figcaption><span>${esc(im.c)}</span><span>${p.n}</span></figcaption></figure>`;
+const sizes=['','s lo','s hi'];
+document.getElementById('work').innerHTML=P.map((p,pi)=>{
+  let k=0;
+  const parts=p.order.map(o=>{
+    if(typeof o==='number'){const r=p.imgs[o].w/p.imgs[o].h;const c=r>1.8?'s lo':r>1.3?'':sizes[(k++)%3];return plate(p.imgs[o],p,c)}
+    if(o==='cover')return `<div class="cover"><div class="num">${p.n}</div><div><h2>${p.t}</h2><div class="meta lab"><span><b>Project</b>${p.sub}</span><span><b>Discipline</b>${p.disc}</span><span><b>Plates</b>${p.imgs.length}</span></div></div></div>`;
+    if(o==='about')return `<div class="txt"><h3><span>About project</span><span>[${p.n}]</span></h3><p class="lead">${p.about}</p><dl><dt><em>—</em>Challenge</dt><dd>${p.challenge}</dd></dl></div>`;
+    if(o==='sol')return `<div class="txt"><h3><span>Design solutions</span><span>[${p.n}]</span></h3><dl>${p.sol.map((s,j)=>`<div><dt><em>${String.fromCharCode(97+j)}</em>${s[0]}</dt><dd>${s[1]}</dd></div>`).join('')}</dl></div>`;
+    if(o==='res')return `<div class="txt"><h3><span>Result</span><span>[${p.n}]</span></h3><dl>${p.res.map((s,j)=>`<div><dt><em>${String.fromCharCode(97+j)}</em>${s[0]}</dt><dd>${s[1]}</dd></div>`).join('')}</dl></div>`;
+    if(o==='stat')return `<div class="stat"><div class="big${p.stat[3]?' wd':''}">${p.stat[0]}${p.stat[1]?`<sup>${p.stat[1]}</sup>`:''}</div><span class="lab">${p.stat[2]}</span></div>`;
+    if(o==='spec')return `<div class="spec"><h3 class="lab" style="font-weight:500">Palette &amp; type</h3><div class="sw">${p.spec.sw.map(s=>`<div><i style="background:${s[0]}"></i><span class="lab">${s[1]}</span></div>`).join('')}</div><div class="faces">${p.spec.faces.map(f=>`<div><span class="aa" style="font-family:${p.spec.ff};font-weight:${f[2]}">Aa</span><span class="lab">${f[0]} — ${f[1]}</span></div>`).join('')}</div></div>`;
+    if(o==='next'){const q=P[(pi+1)%P.length];const last=pi===P.length-1;return `<div class="next"><span class="lab mute">${last?'That’s all five':'Next project'}</span><a href="#${last?'contact':q.k}">${last?'Say<br>hello':`${q.t}`} <span>→</span></a><span class="lab">${last?'61withlove design':'['+q.n+'] '+q.sub}</span></div>`}
+  }).join('');
+  return `<section class="proj" id="${p.k}" data-i="${pi}" aria-label="${esc(p.t)}"><div class="pin"><div class="track">${parts}</div><div class="hud lab"><span>[${p.n}] ${p.t}</span><span class="bar"><i></i></span><span class="cnt">01 / ${String(p.order.length).padStart(2,'0')}</span></div></div></section>`;
+}).join('');
+
+/* ---------- motion ---------- */
+const RM=matchMedia('(prefers-reduced-motion: reduce)');
+const FINE=matchMedia('(pointer:fine)');
+const secs=[...document.querySelectorAll('.proj')];
+let dists=[];
+function layout(){
+  fitWord();
+  const pinned=innerWidth>860&&!RM.matches;
+  document.documentElement.classList.toggle('static',!pinned);
+  secs.forEach((s,i)=>{
+    const t=s.querySelector('.track');
+    if(!pinned){s.style.height='';dists[i]=0;return}
+    const d=Math.max(0,t.scrollWidth-innerWidth);dists[i]=d;s.style.height=(innerHeight+d)+'px';
+  });
+  tick();
+}
+const where=document.getElementById('where');
+function tick(){
+  let cur='Index';
+  secs.forEach((s,i)=>{
+    const r=s.getBoundingClientRect();
+    if(r.top<innerHeight*.5&&r.bottom>innerHeight*.5)cur=`[${P[i].n}] ${P[i].t}`;
+    if(!dists[i])return;
+    const p=Math.min(1,Math.max(0,-r.top/dists[i]));
+    s.querySelector('.track').style.transform=`translate3d(${-p*dists[i]}px,0,0)`;
+    s.querySelector('.bar i').style.width=(p*100)+'%';
+    const n=P[i].order.length;s.querySelector('.cnt').textContent=String(Math.min(n,1+Math.round(p*(n-1)))).padStart(2,'0')+' / '+String(n).padStart(2,'0');
+  });
+  if(window.scrollY<innerHeight*.6)cur='Index';
+  if(where.textContent!==cur)where.textContent=cur;
+}
+let raf=0;addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;tick()})},{passive:true});
+addEventListener('resize',layout);
+document.fonts&&document.fonts.ready.then(layout);
+addEventListener('load',layout);
+layout();
+
+/* hero: seeded table of plates + cursor trail + elastic letters */
+const stage=document.getElementById('stage');
+const seeds=[[10,38,P[0].imgs[0],-4],[28,62,P[1].imgs[1],3],[47,34,P[2].imgs[1],-2],[64,64,P[3].imgs[0],5],[83,40,P[4].imgs[3],-3]];
+seeds.forEach(([x,y,im,r],i)=>{
+  const d=document.createElement('a');d.className='trail seed';d.href='#'+P[i].k;
+  d.style.left=x+'%';d.style.top=y+'%';d.style.rotate=r+'deg';d.style.zIndex=1;
+  d.innerHTML=`<img src="${im.f}" alt="${esc(P[i].t)}"><span class="cap"><span>${P[i].t}</span><span>${P[i].n}</span></span>`;
+  stage.appendChild(d);
+});
+const hero=document.querySelector('.hero');
+hero.addEventListener('pointermove',e=>{
+  if(RM.matches||document.getElementById('scene').classList.contains('gl'))return;
+  L.forEach(s=>{const b=s.getBoundingClientRect();const dx=(e.clientX-(b.left+b.width/2))/innerWidth;const g=Math.exp(-(dx*dx)/.012);s.style.fontVariationSettings=`"wdth" ${Math.round(62+63*g)}`});
+});
+hero.addEventListener('pointerleave',()=>L.forEach(s=>s.style.fontVariationSettings='"wdth" 100'));
+window.glHover=false;
+
+/* index peek */
+const peek=document.getElementById('peek');
+document.querySelectorAll('.row a').forEach(a=>{
+  a.addEventListener('pointerenter',()=>{const p=P[a.dataset.i];peek.src=p.imgs[0].f;peek.classList.add('on')});
+  a.addEventListener('pointerleave',()=>peek.classList.remove('on'));
+});
+
+/* cursor */
+const cur=document.getElementById('cur');
+let cx=0,cy=0,tx=0,ty=0;
+if(FINE.matches){
+  addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;cur.classList.add('on');
+    const g=e.target.id==='gl';const t=e.target.closest('.plate,.trail.seed,.row a');cur.classList.toggle('big',!!t||(g&&window.glHover));cur.querySelector('b').textContent=g?(window.glHover?'Open':''):(t&&t.matches('.row a,.trail.seed')?'Open':'View');cur.classList.toggle('ring',g&&!window.glHover);});
+  document.addEventListener('pointerleave',()=>cur.classList.remove('on'));
+  (function loop(){cx+=(tx-cx)*.22;cy+=(ty-cy)*.22;cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;peek.style.left=cx+'px';peek.style.top=cy+'px';requestAnimationFrame(loop)})();
+}
+
+/* anchor jumps land at the start of a pinned section */
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="#"]');if(!a)return;
+  const el=document.getElementById(a.getAttribute('href').slice(1));if(!el)return;
+  e.preventDefault();window.scrollTo({top:el.getBoundingClientRect().top+scrollY+(el.classList.contains('proj')?1:0),behavior:RM.matches?'auto':'smooth'});
+});
+
+/* lightbox */
+const lb=document.getElementById('lb'),lbI=document.getElementById('lbI');let li=0;
+function show(i){li=(i+ALL.length)%ALL.length;const it=ALL[li];lbI.src=it.f;lbI.alt=it.p.t+': '+it.c;document.getElementById('lbT').textContent=`[${it.p.n}] ${it.p.t} — ${it.c}`;document.getElementById('lbN').textContent=`${li+1} / ${ALL.length}`}
+document.addEventListener('click',e=>{const f=e.target.closest('.plate');if(!f)return;show(ALL.findIndex(x=>x.f===f.dataset.src));lb.classList.add('on');document.getElementById('lbX').focus()});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('plate'))e.target.click();
+  if(!lb.classList.contains('on'))return;
+  if(e.key==='Escape')lb.classList.remove('on');if(e.key==='ArrowRight')show(li+1);if(e.key==='ArrowLeft')show(li-1);
+});
+document.getElementById('lbX').onclick=()=>lb.classList.remove('on');
+document.getElementById('lbP').onclick=()=>show(li-1);
+document.getElementById('lbF').onclick=()=>show(li+1);
+lb.addEventListener('click',e=>{if(e.target===lb||e.target.tagName==='FIGURE')lb.classList.remove('on')});
+/* ---------- 3D hero: liquid glass metaballs refracting the wordmark, melting into a heart ---------- */
+(function(){
+  const scene=document.getElementById('scene'),cv=document.getElementById('gl');
+  const gl=cv.getContext('webgl',{antialias:false,alpha:false,premultipliedAlpha:false,powerPreference:'high-performance'});
+  if(!gl)return;
+  scene.classList.add('gl');
+
+  const VS=`attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}`;
+  const FS=`
+precision highp float;
+uniform vec2 uRes;uniform float uT,uHeart,uIn,uAsp,uMA,uStir,uZoom;uniform vec2 uM;uniform sampler2D uTex;
+const vec3 LOVE=vec3(.894,.278,.110);
+const vec3 GROUND=vec3(.949,.933,.925);
+float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
+float dot2(vec2 v){return dot(v,v);}
+float sdHeart(vec2 p){p.x=abs(p.x);
+  if(p.y+p.x>1.)return sqrt(dot2(p-vec2(.25,.75)))-sqrt(2.)/4.;
+  return sqrt(min(dot2(p-vec2(0.,1.)),dot2(p-.5*max(p.x+p.y,0.))))*sign(p.x-p.y);}
+mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+float heart(vec3 p){
+  p.xz*=rot(sin(uT*.7)*.55);
+  float s=1.25;vec2 q=p.xy/s+vec2(0.,.52);
+  float d2=sdHeart(q)*s;
+  return length(vec2(max(d2+.3,0.),p.z))-.3;
+}
+float blobs(vec3 p){
+  float d=1e5;float sx=min(uAsp*uZoom*1.05,2.5);
+  for(int i=0;i<6;i++){
+    float f=float(i);
+    vec3 c=vec3(sin(uT*(.23+f*.041)+f*2.1)*sx,
+                cos(uT*(.31+f*.033)+f*1.3)*.62,
+                sin(uT*(.27+f*.05)+f)*.5);
+    float r=(.30+.11*sin(f*1.7+uT*.5))*uIn;
+    d=smin(d,length(p-c)-r,.55);
+  }
+  d=smin(d,length(p-vec3(uM,.35))-.30*uMA,.6);
+  return d;
+}
+float map(vec3 p){
+  float b=blobs(p);
+  if(uHeart<.001)return b;
+  return mix(b,heart(p),uHeart);
+}
+vec3 nrm(vec3 p){vec2 e=vec2(.0015,-.0015);
+  return normalize(e.xyy*map(p+e.xyy)+e.yyx*map(p+e.yyx)+e.yxy*map(p+e.yxy)+e.xxx*map(p+e.xxx));}
+float hash(vec2 p){return fract(sin(dot(p,vec2(41.3,289.1)))*43758.5453);}
+vec3 bg(vec2 uv){return texture2D(uTex,clamp(uv,0.,1.)).rgb;}
+vec3 env(vec3 r){
+  vec3 c=GROUND*.55;
+  c+=vec3(1.)*smoothstep(.55,.95,r.y)*.9;                                  // overhead softbox
+  c+=vec3(1.)*smoothstep(.82,.99,dot(r,normalize(vec3(-.9,.25,.4))))*.9;   // key strip
+  c+=LOVE*smoothstep(.62,.98,dot(r,normalize(vec3(.95,-.25,.35))))*1.25;   // the orange side light
+  c=mix(c,vec3(.05),smoothstep(.1,-.7,r.y)*.55);                            // dark floor
+  return c;
+}
+void main(){
+  vec2 uv=gl_FragCoord.xy/uRes;
+  vec2 p=(gl_FragCoord.xy-.5*uRes)/uRes.y;
+  vec3 ro=vec3(0.,0.,6.),rd=normalize(vec3(p*uZoom,-2.5));
+  float t=3.4,d=0.;bool hit=false;
+  for(int i=0;i<90;i++){
+    d=map(ro+rd*t);
+    if(d<.0012){hit=true;break;}
+    t+=d*.85;if(t>8.5)break;
+  }
+  vec3 col;
+  if(hit){
+    vec3 pos=ro+rd*t,n=nrm(pos),v=-rd;
+    float ndv=max(dot(n,v),0.);
+    float fres=.03+.97*pow(1.-ndv,5.);
+    vec3 rf=refract(rd,n,1./1.48);
+    float th=.20+.10*(1.-ndv);
+    vec2 o=rf.xy*th*vec2(1./uAsp,1.)*1.7;
+    vec3 refr=vec3(bg(uv+o*1.00).r,bg(uv+o*1.035).g,bg(uv+o*1.07).b);
+    refr*=vec3(.975,.965,.96);
+    refr=mix(refr,refr*vec3(.78,.74,.72),smoothstep(.6,0.,ndv)*.5);
+    vec3 r=reflect(rd,n);
+    col=mix(refr,env(r),fres);
+    vec3 L=normalize(vec3(-.6,.7,.8));
+    col+=vec3(1.)*pow(max(dot(r,L),0.),90.)*1.2;
+    col+=LOVE*pow(max(dot(r,normalize(vec3(.8,-.3,.6))),0.),40.)*.5*(.4+uHeart);
+  }else{
+    col=bg(uv);
+    // soft shadow + a warm caustic on the paper behind
+    vec3 P=ro+rd*((-1.3-ro.z)/rd.z);
+    vec3 L=normalize(vec3(-.35,.45,1.));
+    float res=1.,s=.15;
+    for(int k=0;k<22;k++){float h=map(P+L*s);res=min(res,7.*h/s);s+=clamp(h,.06,.45);if(res<.01||s>4.)break;}
+    res=clamp(res,0.,1.);
+    float sh=smoothstep(0.,1.,res);
+    col=mix(col*vec3(.86,.83,.82),col,sh);
+    col+=LOVE*.10*smoothstep(.15,.45,res)*(1.-smoothstep(.45,.9,res))*(.5+uHeart);
+  }
+  col+=(hash(gl_FragCoord.xy+fract(uT)*91.)-.5)*.022;   // grain
+  gl_FragColor=vec4(col,1.);
+}`;
+  function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s}
+  const vs=sh(gl.VERTEX_SHADER,VS),fs=sh(gl.FRAGMENT_SHADER,FS);
+  if(!vs||!fs){scene.classList.remove('gl');return}
+  const pr=gl.createProgram();gl.attachShader(pr,vs);gl.attachShader(pr,fs);gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){scene.classList.remove('gl');return}
+  gl.useProgram(pr);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const aLoc=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(aLoc);gl.vertexAttribPointer(aLoc,2,gl.FLOAT,false,0,0);
+  const U={};['uRes','uT','uHeart','uIn','uAsp','uM','uMA','uStir','uTex','uZoom'].forEach(n=>U[n]=gl.getUniformLocation(pr,n));
+
+  /* the paper behind the glass: wordmark drawn in screen space */
+  const tc=document.createElement('canvas'),tx=tc.getContext('2d');
+  const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+  function paper(w,h,k){
+    tc.width=w;tc.height=h;
+    tx.fillStyle='#F2EEEC';tx.fillRect(0,0,w,h);
+    const gut=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gut'))||32)*k;
+    const lines=w/h<1.1?['61WITH','LOVE']:['61WITHLOVE'];let fs=200;
+    const f=s=>`860 ${s}px Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif`;
+    tx.font=f(fs);const mw=Math.max(...lines.map(l=>tx.measureText(l).width));fs=fs*(w-gut*2)/mw;tx.font=f(fs);
+    const m=tx.measureText(lines[0]);const capH=m.actualBoundingBoxAscent||fs*.72,lh=capH*1.12;
+    const asc=capH+lh*(lines.length-1);
+    tx.fillStyle='#0C0C0C';tx.textBaseline='alphabetic';
+    lines.forEach((l,i)=>tx.fillText(l,gut,h*.5-asc*.5+capH+i*lh));
+    // fine plan-drawing marks
+    tx.strokeStyle='rgba(12,12,12,.18)';tx.lineWidth=Math.max(1,k);
+    tx.beginPath();tx.moveTo(gut,h*.5+asc*.5+18*k);tx.lineTo(w-gut,h*.5+asc*.5+18*k);tx.stroke();
+    tx.font=`400 ${10.5*k}px "IBM Plex Mono", ui-monospace, monospace`;tx.fillStyle='rgba(12,12,12,.45)';
+    tx.fillText('FIG. 00',gut,h*.5+asc*.5+36*k);
+    const r='GLASS / 6 BODIES / 1 HEART';tx.fillText(r,w-gut-tx.measureText(r).width,h*.5+asc*.5+36*k);
+    gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,tc);
+  }
+
+  let W=1,H=1,K=1;
+  const zoom=()=>Math.max(1,1.25/(W/H));
+  function resize(){
+    const cw=scene.clientWidth,ch=scene.clientHeight;
+    K=Math.min(devicePixelRatio||1,1.5)*(cw*ch>1.4e6?.8:1);
+    W=Math.max(2,Math.round(cw*K));H=Math.max(2,Math.round(ch*K));
+    cv.width=W;cv.height=H;gl.viewport(0,0,W,H);
+    paper(W,H,K);
+    if(!running)frame(performance.now());
+  }
+
+  /* pointer: a seventh blob follows the cursor; a click melts everything into a heart */
+  let mx=0,my=0,tmx=0,tmy=0,ma=0,tma=0,heart=0,heartUntil=0,nextHeart=performance.now()+9000,stir=0;
+  function toWorld(e){const r=cv.getBoundingClientRect();const px=(e.clientX-r.left-r.width/2)/r.height,py=-(e.clientY-r.top-r.height/2)/r.height;const z=zoom();return [px*z*(6-.35)/2.5,py*z*(6-.35)/2.5]}
+  cv.addEventListener('pointermove',e=>{const w=toWorld(e);tmx=w[0];tmy=w[1];tma=1;if(e.pointerType!=='mouse')tma=0;});
+  cv.addEventListener('pointerleave',()=>{tma=0});
+  cv.addEventListener('click',()=>{heartUntil=performance.now()+3800;nextHeart=heartUntil+12000;if(!running)frame(performance.now()+4000)});
+  window.glHover=false;
+
+  let running=false,visible=true,t0=performance.now(),last=t0;
+  const loop=now=>{if(!visible||RM.matches){running=false;return}frame(now);requestAnimationFrame(loop)};
+  function kick(){if(!running&&visible&&!RM.matches){running=true;requestAnimationFrame(loop)}}
+  function frame(now){
+    const dt=Math.min(.05,(now-last)/1000);last=now;
+    const kf=1-Math.exp(-dt*5);mx+=(tmx-mx)*kf;my+=(tmy-my)*kf;ma+=(tma-ma)*(1-Math.exp(-dt*3));
+    if(now>nextHeart){heartUntil=now+3800;nextHeart=now+16000}
+    const want=now<heartUntil?1:0;heart+=(want-heart)*(1-Math.exp(-dt*(want?2.2:1.8)));
+    const intro=RM.matches?1:Math.min(1,(now-t0)/1800);const ein=1-Math.pow(1-intro,3);
+    gl.uniform2f(U.uRes,W,H);gl.uniform1f(U.uT,RM.matches?6.:(now-t0)/1000+4);
+    gl.uniform1f(U.uHeart,heart*heart*(3-2*heart));gl.uniform1f(U.uIn,ein);gl.uniform1f(U.uAsp,W/H);
+    gl.uniform2f(U.uM,mx,my);gl.uniform1f(U.uMA,ma);gl.uniform1f(U.uStir,stir);gl.uniform1i(U.uTex,0);gl.uniform1f(U.uZoom,zoom());
+    gl.drawArrays(gl.TRIANGLES,0,3);
+  }
+  new IntersectionObserver(es=>{visible=es[0].isIntersecting;kick()}).observe(scene);
+  const fontsReady=document.fonts&&document.fonts.load?Promise.all([document.fonts.load('860 100px Archivo'),document.fonts.load('400 11px "IBM Plex Mono"')]).catch(()=>{}):Promise.resolve();
+  resize();
+  fontsReady.then(()=>{resize();new ResizeObserver(resize).observe(scene);t0=performance.now();kick()});
+})();
+
+</script>
+</body>
+</html>
